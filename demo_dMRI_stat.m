@@ -1,12 +1,15 @@
-function demo_dMRI_stat
+function [a, v] = demo_dMRI_stat
 
-for bb = 1:10000
+% for bb = 1:10000
     Y = Y_generate;
     YMat1 = Y(:, :, :, 1);
     YMat2 = Y(:, :, :, 2);
     
     Y1_ = mean(YMat1, 3);
     Y2_ = mean(YMat2, 3);
+    
+    S1 = cov_calc(YMat1);
+    S2 = cov_calc(YMat2);
     
     [V1, ~] = eig(Y1_);
     [V2, ~] = eig(Y2_);
@@ -23,12 +26,16 @@ for bb = 1:10000
     for i = 1:3
         for j = 1:3
             Eij = E_func(i, j);
-            hij = 1/2*diag(V2'*Eij*V2 + V1'*Eji*V1);
+            hij = 1/2*diag(V2'*Eij*V2 + V1'*Eij*V1);
             wij = [matTvec(Eij) - J_U1*hij; -matTvec(Eij) + J_U2*hij];
             omega = omega + wij*wij';         
         end
     end
     Omega = omega*50*50/100; 
+    Sigma = [S1/50, zeros(size(S1));zeros(size(S2)), S2/50];
     
-end
+    a = trace(Sigma*Omega*Sigma*Omega)/trace(Sigma*Omega);
+    v = (trace(Sigma*Omega))^2/trace(Sigma*Omega*Sigma*Omega);
+    
+% end
 

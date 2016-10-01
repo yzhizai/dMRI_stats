@@ -15,10 +15,10 @@ YMat1 = zeros(3, 3, 50);
 YMat2 = zeros(3, 3, 50);
 
 for aa = 1:50
-    Y1 = vecTmat(mvnrnd(mat2vec(Mu1), Sigma));
-    YMat1(3, 3, aa) = Y1;
-    Y2 = vecTmat(mvnrnd(mat2vec(Mu2), sigma));
-    YMat2(3, 3, aa) = Y2;
+    Y1 = vecTmat(mvnrnd(matTvec(Mu1), Sigma));
+    YMat1(:, :, aa) = Y1;
+    Y2 = vecTmat(mvnrnd(matTvec(Mu2), Sigma));
+    YMat2(:, :, aa) = Y2;
 end
 
 Y = cat(4, YMat1, YMat2);

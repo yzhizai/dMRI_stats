@@ -8,6 +8,9 @@ for bb = 1:10000
     Y1_ = mean(YMat1, 3);
     Y2_ = mean(YMat2, 3);
     
+    S1 = cov_calc(YMat1);
+    S2 = cov_calc(YMat2);
+    
     [V1, ~] = eig(Y1_);
     [V2, ~] = eig(Y2_);
     
@@ -29,6 +32,8 @@ for bb = 1:10000
         end
     end
     Omega = omega*50*50/100; 
+    Sigma = [S1/50, zeros(size(S1));zeros(size(S2)), S2/50];
+    
     
 end
 
