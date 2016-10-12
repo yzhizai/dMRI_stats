@@ -1,4 +1,8 @@
 function matT4D(foldername)
+%merge each subjects' slice data to a 4D matrix, which stored in 
+%sliceData.mat file.
+%
+%Note: better to distinguish the different group.
 oldpath = pwd;
 cd(foldername);
 

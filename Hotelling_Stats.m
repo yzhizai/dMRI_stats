@@ -10,7 +10,7 @@ for aa = 1:size(grp1, 4)
     subgrp = grp1(:, :, :, aa);
     subgrp = Nine2Six(subgrp);
     subgrpC = num2cell(subgrp, 3);
-    temp = cell2array(cellfun(@(x, y) x*y', subgrpC, subgrpC, 'UniformOutput', false)); 
+    temp = cell2array(cellfun(@(x, y) x(:)*y(:)', subgrpC, subgrpC, 'UniformOutput', false)); 
     S1_temp = cat(4, S1_temp, temp);
 end
 
@@ -21,7 +21,7 @@ for aa = 1:size(grp2, 4)
     subgrp = grp2(:, :, :, aa);
     subgrp = Nine2Six(subgrp);
     subgrpC = num2cell(subgrp, 3);
-    temp = cell2array(cellfun(@(x, y) x*y', subgrpC, subgrpC, 'UniformOutput', false)); 
+    temp = cell2array(cellfun(@(x, y) x(:)*y(:)', subgrpC, subgrpC, 'UniformOutput', false)); 
     S2_temp = cat(4, S2_temp, temp);
 end
 S2 = sum(S2_temp, 4)/(size(S2_temp, 4) - 1);
@@ -40,12 +40,13 @@ mat6(:, :, 4:6) = sqrt(2)*mat6(:, :, 4:6);
 
 function t2 = hotelling_t2(dmat, Smat)
 
-t2 = dmat/reshape(Smat, 6, 6)*dmat;
+t2 = dmat(:)'/reshape(Smat, 6, 6)*dmat(:);
 
 function dof = hotelling_dof(dmat, Smat, S1mat, S2mat, n1, n2)
-d = dmat;
+d = dmat(:);
 S = reshape(Smat, 6, 6);
 S1 = reshape(S1mat, 6, 6);
 S2 = reshape(S2mat, 6, 6);
 
-dof = ((d'/S*S1/S*d)/(n1*d'/S*d))^2/(n1 -1) + ((d'/S*S2/S*d)/(n2*d'/S*d))^2/(n2 -1);
+temp = ((d'/S*S1/S*d)/(n1*d'/S*d))^2/(n1 -1) + ((d'/S*S2/S*d)/(n2*d'/S*d))^2/(n2 -1);
+dof = 1/temp;
