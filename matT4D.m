@@ -3,6 +3,9 @@ function matT4D(foldername)
 %sliceData.mat file.
 %
 %Note: better to distinguish the different group.
+if exist(fullfile(foldername, 'sliceData.mat'), 'file')
+    return
+end
 oldpath = pwd;
 cd(foldername);
 

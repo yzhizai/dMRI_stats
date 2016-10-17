@@ -4,7 +4,7 @@ filename = spm_select(1, 'mat');
 
 Dat = load(filename);
 
-[T2, dof] = Hotelling_Stats(Dat.sliceData, 9, 9);
+[T2, dof] = Hotelling_Stats(Dat.sliceData, 10, 8);
 
 filename2 = spm_select(1, 'image');
 

@@ -1,6 +1,7 @@
 function [T2, f] = Hotelling_Stats(sliceData, n1, n2)
 %Input:
 %  
+warning off
 grp1 = sliceData(:, :, :, 1:n1);
 grp2 = sliceData(:, :, :, n1 + 1:end);
 
@@ -31,7 +32,7 @@ S = S1/9 + S2/9;
 T2 = cellfun(@hotelling_t2, num2cell(d, 3), num2cell(S, 3));
 f = cellfun(@(dmat, Smat, S1mat, S2mat) hotelling_dof(dmat, Smat, S1mat, S2mat, n1, n2), num2cell(d, 3), ...
     num2cell(S, 3), num2cell(S1, 3), num2cell(S2, 3));
-
+warning on
 % transfer A(:) to vecd(reshape(A, 3, 3)) type.
 function mat6 = Nine2Six(mat9)
 
