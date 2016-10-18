@@ -1,6 +1,6 @@
 function Hotelling_Stats_batch_demo
 
-foldernames = cellstr(spm_select(Inf, 'mat'));
+foldernames = cellstr(spm_select(Inf, 'dir'));
 
 filename2 = spm_select(1, 'image');
 V = spm_vol(filename2);
