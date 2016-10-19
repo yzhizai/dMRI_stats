@@ -27,7 +27,7 @@ for aa = 1:size(grp2, 4)
 end
 S2 = sum(S2_temp, 4)/(size(S2_temp, 4) - 1);
 
-S = S1/9 + S2/9;
+S = S1/n1 + S2/n2;
 
 T2 = cellfun(@hotelling_t2, num2cell(d, 3), num2cell(S, 3));
 f = cellfun(@(dmat, Smat, S1mat, S2mat) hotelling_dof(dmat, Smat, S1mat, S2mat, n1, n2), num2cell(d, 3), ...
