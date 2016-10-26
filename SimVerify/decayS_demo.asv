@@ -5,12 +5,10 @@ rng('default')
 tensorDir1 = rand(3);
 tensorDir1 = orth(tensorDir1); % generate 3 direction.
 
-bvalfile = spm_select(1, 'bval', ...
-    'choose the diffusion direction');
-bval = load(bvalfile);
-bvecfile = spm_select(1, 'bvec', ...
-    'choose the diffusion direction');
-bvec = load(bvecfile);
+bval = load(spm_select(1, 'bval', ...
+    'choose the diffusion direction'));
+bvec = load(spm_select(1, 'bvec', ...
+    'choose the diffusion direction'));
 
 Rvec = pi/2*tensorDir1(:, 3)';
 Rmat = rotationVectorToMatrix(Rvec); %make the tensorDir rotate with z-axis with 90 to
@@ -31,8 +29,6 @@ for aa = 0.1:0.1:0.9
     for bb = 1:numel(decF)
         sonfolder = fullfile(fatherfolder, sprintf('sub_%03d', bb));
         mkdir(sonfolder);
-        copyfile(bvecfile, fullfile(sonfolder, 'bvecs'));
-        copyfile(bvalfile, fullfile(sonfolder, 'bvals'));
         S = S0*decF{bb};
         outputFiles(sonfolder, S);
     end      
@@ -55,8 +51,6 @@ create(ni);
 for i=1:size(ni.dat,4)
     ni.dat(:,:,:,i) = padarray(repmat(S(i), 2, 2, 2), [7, 7, 3]);
 end
-
-
 
 fname = fullfile(dirname, 'nodif_brain_mask.nii');
 ni_mask = nifti;
