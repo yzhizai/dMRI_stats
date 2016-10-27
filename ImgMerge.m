@@ -7,7 +7,7 @@ V = spm_vol(filename);
 
 T2 = zeros([V.dim(1:2), N_folder]);
 for aa = 1:N_folder
-    [~, tit] = fileparts(foldername{aa});
+    [pat, tit] = fileparts(foldername{aa});
     s = textscan(tit, '%s', 'delimiter', '_');
     nslice = str2double(s{1}{2});
     
@@ -17,7 +17,7 @@ end
 
 datMat = {T2};
 
-dirname = spm_select(1, 'dir');
+dirname = pat;
 fname = {'T2_3d.nii'};
 
 cellfun(@(x, y) write2store(dirname, V, N_folder, x, y), fname, datMat);

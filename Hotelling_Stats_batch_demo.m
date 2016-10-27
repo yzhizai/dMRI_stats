@@ -9,7 +9,7 @@ for aa = 1:numel(foldernames)
     
     Dat = load('sliceData.mat');
 
-    T2 = Hotelling_Stats(Dat.sliceData, 10, 8);
+    T2 = Hotelling_Stats(Dat.sliceData, 10, 10);
 
 
     fname2 = 'T2.nii';

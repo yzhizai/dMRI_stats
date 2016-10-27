@@ -14,11 +14,11 @@ function dataConvert(foldername)
 oldpath = pwd();
 cd(foldername);
 
-dyads1_array = spm_read_vols(spm_vol('dyads1_warp.nii'));
-dyads2_array = spm_read_vols(spm_vol('dyads2_warp.nii'));
+dyads1_array = spm_read_vols(spm_vol('dyads1.nii'));
+dyads2_array = spm_read_vols(spm_vol('dyads2.nii'));
 
-f1 = spm_read_vols(spm_vol('mean_f1samples_warp.nii'));
-f2 = spm_read_vols(spm_vol('mean_f2samples_warp.nii'));
+f1 = spm_read_vols(spm_vol('mean_f1samples.nii'));
+f2 = spm_read_vols(spm_vol('mean_f2samples.nii'));
 
 dyads1 = arrayfun(@scalar2vector, dyads1_array(:, :, :, 1), dyads1_array(:, :, :, 2), ...
     dyads1_array(:, :, :, 3), 'UniformOutput', false);
