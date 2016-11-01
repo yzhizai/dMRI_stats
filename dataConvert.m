@@ -44,7 +44,7 @@ if f1 < 0.1 || isequal(zeros(3, 1), vec1) || isequal(zeros(3, 1), vec2) %promise
     siT = zeros(numel(vec1));
     return
 end
-vec1 = sign(vec1(3))*vec1; %modify the vector to align with the z-axis.
+vec1 = sign(vec1(3))*vec1;    %modify the vector to align with the z-axis.
 vec2 = sign(vec1'*vec2)*vec2; %promise the angle between two vector less than 90.
 
 vec3 = cross(vec1, vec2);
