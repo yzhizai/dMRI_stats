@@ -1,4 +1,4 @@
-function [s1, s2, s] = mixWatsonMainFunc(filenames1, filenames2, n1, n2)
+function Fval = mixWatsonMainFunc(filenames1, filenames2, n1, n2)
 
 total_dyads1 = [];
 total_dyads2 = [];
@@ -25,11 +25,14 @@ s1 = f(eigM1_1, eigM1_2);
 s2 = f(eigM2_1, eigM2_2);
 s = f(eigM3_1, eigM3_2);
 
+N = n1 + n2;
+Fval = (N - 2)*(N*s - n1*s1 - n2*s2)./(n1*s1 + n2*s2);
+
 function [eigM1, eigM2, eigM3] = mixWatson(dyadsM, n1, n2)
 [xdim, ydim, zdim, ~] = size(dyadsM);
 dyadsM_5D = reshape(dyadsM, xdim, ydim, zdim, 3, []);
-dyads1 = dyadsM_5D(:, :, :, :, n1);
-dyads2 = dyadsM_5D(:, :, :, :, n2);
+dyads1 = dyadsM_5D(:, :, :, :, 1:n1);
+dyads2 = dyadsM_5D(:, :, :, :, (end-n2 + 1):end);
 
 eigM1 = zeros(xdim, ydim, zdim);
 eigM2 = zeros(xdim, ydim, zdim);

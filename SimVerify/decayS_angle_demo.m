@@ -28,7 +28,7 @@ for aa = 1:numel(theta)
         %produce tensorDir2;
         tensorDir2 = Rmat*tensorDir1*Rmat';
         S2 = decayS(tensorDir2, bval, bvec);
-        decF = 0.5*S1 + 0.5*S2;
+        decF = 0.7*S1 + 0.3*S2;
         sonfolder = fullfile(fatherfolder, sprintf('sub_%03d', bb));
         mkdir(sonfolder);
         copyfile(bvecfile, fullfile(sonfolder, 'bvecs'));

@@ -12,7 +12,7 @@ function S = decayS(tensorDir, bval, bvec)
 %Institute of High Energy Physics
 %2016-10-25
 
-b = 1000;
+b = max(bval);
 d1 = 1.49*10^(-3); % the unit is mm^2*s^-1
 d2 = 0.72*10^(-3);
 n  = tensorDir(:, 1);
