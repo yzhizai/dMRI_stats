@@ -2,8 +2,7 @@ function decayS_demo
 
 outputDir = spm_select(1, 'dir');
 rng('default')
-tensorDir1 = rand(3);
-tensorDir1 = orth(tensorDir1); % generate 3 direction.
+tensorDir1 = orth(rand(3)); % generate 3 direction.
 
 bvalfile = spm_select(1, 'bval', ...
     'choose the diffusion direction');
@@ -16,7 +15,7 @@ Rvec = pi/2*tensorDir1(:, 3)';
 Rmat = rotationVectorToMatrix(Rvec); %make the tensorDir rotate with z-axis with 90 to
 %produce tensorDir2;
 
-tensorDir2 = Rmat*tensorDir1*Rmat';
+tensorDir2 = Rmat*tensorDir1;
 
 S1 = decayS(tensorDir1, bval, bvec);
 S2 = decayS(tensorDir2, bval, bvec);
