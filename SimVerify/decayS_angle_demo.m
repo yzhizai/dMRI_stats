@@ -18,7 +18,7 @@ theta = pi/12:pi/12:pi/2;
 
 for aa = 1:numel(theta)
     
-    fatherfolder = fullfile(outputDir, sprintf('theta_%02d', theta(aa)*180/pi));
+    fatherfolder = fullfile(outputDir, sprintf('theta_%02d', round(theta(aa)*180/pi)));
     mkdir(fatherfolder);
 
     for bb = 1:10      
