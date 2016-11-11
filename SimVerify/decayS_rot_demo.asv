@@ -1,8 +1,8 @@
-function decayS_ag_demo(lambda)
+function decayS_rot_demo(lambda)
 
 outputDir = spm_select(1, 'dir');
 rng('default')
-tensorDir1 = orth(rand(3));% generate 3 direction.
+tensorDir_org = orth(rand(3));% generate 3 direction.
 
 bvalfile = spm_select(1, 'bval', ...
     'choose the diffusion direction');
@@ -11,35 +11,36 @@ bvecfile = spm_select(1, 'bvec', ...
     'choose the diffusion direction');
 bvec = load(bvecfile);
 
-S1 = decayS(tensorDir1, bval, bvec);
+S1 = decayS(tensorDir_org, bval, bvec);
 S0 = 300;
 
 
-for aa = pi/12:pi/12:pi/2
+for aa = pi/12:pi/12:pi
     
-    fatherfolder = fullfile(outputDir, sprintf('theta_%02d', round(aa*180/pi)));
+    fatherfolder = fullfile(outputDir, sprintf('rot_%03d', round(aa*180/pi)));
     mkdir(fatherfolder);
     copyfile(bvecfile, fullfile(fatherfolder, 'bvecs'));
     copyfile(bvalfile, fullfile(fatherfolder, 'bvals'));
      
-    theta = normrnd(x, pi/180, 10, 10, 10);
-    decF = arrayfun(@(x) decF_angle(x, tensorDir1, bval, bvec, lambda, S1), ...
+    theta = normrnd(aa, pi/180, 10, 10, 10);
+    decF = arrayfun(@(x) decF_rot(x, tensorDir_org, bval, bvec, lambda, S1, S0), ...
         theta, 'UniformOutput', false);
   
     %reformat the 3D cell to 4D array, first 3 dimensions was equalvalent, the 4 dimension was the cell{xx}(:)  
     temp = cellfun(@(x) reshape(x, 1, 1, 1, []), decF, 'UniformOutput', false);
     S_temp = cat(1, temp{:});
     S = reshape(S_temp, 10, 10, 10, []);
-    outputFiles(sonfolder, S);   
+    outputFiles(fatherfolder, S);   
 end
 
-function S = decF_angle(x, tensorDir1, bval, bvec, lambda, S1)
-Rvec = normrnd(x, pi/180)*tensorDir1(:, 3)';
+function S = decF_rot(x, tensorDir_org, bval, bvec, lambda, S1, S0)
+
+Rvec = x*tensorDir_org(:, 3)';
 Rmat = rotationVectorToMatrix(Rvec); %make the tensorDir rotate with z-axis with 90 to
 %produce tensorDir2;
-tensorDir2 = Rmat*tensorDir1;
+tensorDir1 = Rmat*tensorDir_org;
 S2 = decayS(tensorDir2, bval, bvec);
-S = lambda*S1 + (1 - lambda)*S2;
+S = S0*(lambda*S1 + (1 - lambda)*S2);
 
 %output simulated data.
 function outputFiles(dirname, S)
@@ -66,19 +67,8 @@ ni_mask.dat = file_array(fname, [xx, yy, zz], [16, spm_platform('bigend')],...
 ni_mask.mat = eye(4);
 ni_mask.mat0 = eye(4);
 ni_mask.descrip = 'mask data';
-
 create(ni_mask);    
-ni_mask.dat(:, :, :) = zeros(xx, yy, zz);
-ni_mask = nifti;
-ni_mask.dat = file_array(fname, [16, 16, 8], [16, spm_platform('bigend')],...
-    0, 1, 0);
-ni_mask.mat = eye(4);
-ni_mask.mat0 = eye(4);
-ni_mask.descrip = 'mask data';
-
-create(ni_mask);    
-ni_mask.dat(:, :, :) = padarray(ones(2, 2, 2), [7, 7, 3]);
-
+ni_mask.dat(:, :, :) = ones(xx, yy, zz);
 
 
 

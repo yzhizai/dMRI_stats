@@ -34,7 +34,7 @@ for aa = pi/12:pi/12:pi/2
 end
 
 function S = decF_angle(x, tensorDir1, bval, bvec, lambda, S1, S0)
-Rvec = normrnd(x, pi/180)*tensorDir1(:, 3)';
+Rvec = x*tensorDir1(:, 3)';
 Rmat = rotationVectorToMatrix(Rvec); %make the tensorDir rotate with z-axis with 90 to
 %produce tensorDir2;
 tensorDir2 = Rmat*tensorDir1;
@@ -56,8 +56,6 @@ create(ni);
 for i=1:size(ni.dat,4)
     ni.dat(:,:,:,i) = S(:, :, :, i);
 end
-
-
 
 fname = fullfile(dirname, 'nodif_brain_mask.nii');
 ni_mask = nifti;

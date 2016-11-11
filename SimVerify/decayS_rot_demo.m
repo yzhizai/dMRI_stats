@@ -1,9 +1,8 @@
-function decayS_pv_demo(theta)
-%theta - the angle between two fibers.
-
+function decayS_rot_demo(angl)
+%angl - the fixed angle between two fibers.
 outputDir = spm_select(1, 'dir');
 rng('default')
-tensorDir1 = orth(rand(3)); % generate 3 direction.
+tensorDir_org = orth(rand(3));% generate 3 direction.
 
 bvalfile = spm_select(1, 'bval', ...
     'choose the diffusion direction');
@@ -12,34 +11,42 @@ bvecfile = spm_select(1, 'bvec', ...
     'choose the diffusion direction');
 bvec = load(bvecfile);
 
-Rvec = theta*tensorDir1(:, 3)';
+S0 = 300;
+
+
+for aa = pi/12:pi/12:pi
+    
+    fatherfolder = fullfile(outputDir, sprintf('rot_%03d', round(aa*180/pi)));
+    mkdir(fatherfolder);
+    copyfile(bvecfile, fullfile(fatherfolder, 'bvecs'));
+    copyfile(bvalfile, fullfile(fatherfolder, 'bvals'));
+     
+    theta = normrnd(aa, pi/180, 10, 10, 10);
+    decF = arrayfun(@(x) decF_rot(x, tensorDir_org, bval, bvec, angl, S0), ...
+        theta, 'UniformOutput', false);
+  
+    %reformat the 3D cell to 4D array, first 3 dimensions was equalvalent, the 4 dimension was the cell{xx}(:)  
+    temp = cellfun(@(x) reshape(x, 1, 1, 1, []), decF, 'UniformOutput', false);
+    S_temp = cat(1, temp{:});
+    S = reshape(S_temp, 10, 10, 10, []);
+    outputFiles(fatherfolder, S);   
+end
+
+function S = decF_rot(x, tensorDir_org, bval, bvec, angl, S0)
+
+Rvec = x*tensorDir_org(:, 3)';
 Rmat = rotationVectorToMatrix(Rvec); %make the tensorDir rotate with z-axis with 90 to
 %produce tensorDir2;
+tensorDir1 = Rmat*tensorDir_org;
 
-tensorDir2 = Rmat*tensorDir1;
+Rvec2 = angl*tensorDir1(:, 3)';
+Rmat2 = rotationVectorToMatrix(Rvec2);
+tensorDir2 = Rmat2*tensorDir1;
 
 S1 = decayS(tensorDir1, bval, bvec);
 S2 = decayS(tensorDir2, bval, bvec);
 
-S0 = 300;
-
-for aa = 0.5:0.1:0.9
-    fatherfolder = fullfile(outputDir, sprintf('lamba_%02d', round(aa*100)));
-    mkdir(fatherfolder);
-    copyfile(bvecfile, fullfile(fatherfolder, 'bvecs'));
-    copyfile(bvalfile, fullfile(fatherfolder, 'bvals'));
-        
-    lambda = normrnd(aa, 0.05, 10, 10, 10); % sigma was defined as 0.05 to reduce the power.
-    decF = arrayfun(@(x) S0*(x*S1 + (1 - x)*S2), lambda, 'UniformOutput', false);
-       
-    temp = cellfun(@(x) reshape(x, 1, 1, 1, []), decF, 'UniformOutput', false);
-    S_temp = cat(1, temp{:});
-    S = reshape(S_temp, 10, 10, 10, []);
-    outputFiles(fatherfolder, S); 
-end
-
-outputFiles('.', S);
-
+S = S0*(0.7*S1 + 0.3*S2);
 
 %output simulated data.
 function outputFiles(dirname, S)
@@ -57,8 +64,6 @@ for i=1:size(ni.dat,4)
     ni.dat(:,:,:,i) = S(:, :, :, i);
 end
 
-
-
 fname = fullfile(dirname, 'nodif_brain_mask.nii');
 ni_mask = nifti;
 ni_mask.dat = file_array(fname, [xx, yy, zz], [16, spm_platform('bigend')],...
@@ -66,10 +71,8 @@ ni_mask.dat = file_array(fname, [xx, yy, zz], [16, spm_platform('bigend')],...
 ni_mask.mat = eye(4);
 ni_mask.mat0 = eye(4);
 ni_mask.descrip = 'mask data';
-
 create(ni_mask);    
-ni_mask.dat(:, :, :) = ;
-
+ni_mask.dat(:, :, :) = ones(xx, yy, zz);
 
 
 
