@@ -53,7 +53,8 @@ vec3 = vec3/norm(vec3);
 vec4 = cross(vec1, vec3);
 vec4 = vec4/norm(vec4);
 
-CosTheta = vec1'*vec2;
+% CosTheta = vec1'*vec2
+CosTheta = vec1'*vec2*(f2/f1 + f2); %add a weight to reduce the random effects.
 
 V = [vec1, vec3, vec4];
 D = diag([f1, f2, CosTheta]);

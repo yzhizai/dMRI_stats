@@ -1,0 +1,23 @@
+function Hotelling_Stats_Power
+%after dataConvert, to do test with this function
+filename1 = spm_select(1, 'mat');
+filename2 = spm_select(2, 'mat');
+
+siT1 = load(filename1);
+siT2 = load(filename2);
+
+siT_nine1 = cellfun(@(x) reshape(x(:), 1, 1, 1, []), siT1.SimTensor, 'UniformOutput', false);
+siT_mat1_temp = cat(1, siT_nine1{:});
+siT_mat1 = reshape(siT_mat1_temp, 10, 10, 10, []);
+
+siT_nine2 = cellfun(@(x) reshape(x(:), 1, 1, 1, []), siT2.SimTensor, 'UniformOutput', false);
+
+
+rndIdx = unidrnd(1000, 10, 1);
+[subx, suby, subz] = ind2sub([10, 10, 10], rndIdx);
+
+
+
+
+
+

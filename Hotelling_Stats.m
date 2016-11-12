@@ -1,6 +1,6 @@
 function T2 = Hotelling_Stats(sliceData, n1, n2)
 %Input:
-%  
+%  sliceData - 
 warning off
 grp1 = sliceData(:, :, :, 1:n1);
 grp2 = sliceData(:, :, :, n1 + 1:end);
