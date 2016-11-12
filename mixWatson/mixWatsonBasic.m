@@ -12,6 +12,7 @@ dyads2 = dyadsM_5D(:, :, :, :, (end-n2 + 1):end);
 
 eigM1 = zeros(xdim, ydim, zdim);
 eigM2 = zeros(xdim, ydim, zdim);
+eigM3 = zeros(xdim, ydim, zdim);
 
 for aa = 1:zdim
     for bb = 1:ydim
