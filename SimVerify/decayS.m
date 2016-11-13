@@ -6,7 +6,7 @@ function S = decayS(tensorDir, bval, bvec)
 %  tensorDir - an orthogonal matrix, each column represented a diffusion
 %  direction
 %  bval - load('*.bval')
-%  bvec - load('*.bvec'
+%  bvec - load('*.bvec')
 %
 %Shaofeng Duan
 %Institute of High Energy Physics
