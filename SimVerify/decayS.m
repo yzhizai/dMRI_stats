@@ -19,12 +19,12 @@ n  = tensorDir(:, 1);
 n2 = tensorDir(:, 2);
 n3 = tensorDir(:, 3);
 
-bmat = bval_bvec_to_matrix(bval, bvec, [2 1 3], [-1, 1, 1]);
+bvec = bvec([2, 1, 3], :);
+bvec = bvec.*repmat([-1, 1, 1]', 1, size(bvec, 2));
 
 D = d1*(n*n') + d2*(n2*n2') + d2*(n3*n3');
-[dxx, dxy, dxz, dyy, dyz, dzz] = Matrix2DT(D);
 S1 = cellfun(@(x) exp(-b*d1*(dot(n, x))^2), num2cell(bvec, 1));
-S2 = cellfun(@(x) exp(-1*dot([dxx, dxy, dxz, dyy, dyz, dzz], x)), num2cell(bmat, 2));
+S2 = cellfun(@(x) exp(-b*x'*D*x), num2cell(bvec, 1));
 
 S = 0.59*S1(:) + 0.41*S2(:);
 

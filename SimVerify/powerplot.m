@@ -1,9 +1,9 @@
 function powerplot
 %%
 close all
-myval = cat(1, zeros(1, 1000), T2);
+myval = abs(cat(1, zeros(1, 1000), Tval));
 % x =[3/2, 7/3, 4/1, 9];
-x = 15:15:90;
+x = 15:15:180;
 figure
 hold on
 for aa = 1:size(myval, 2)
@@ -17,7 +17,7 @@ watpower = sum(myval > 19.5, 2)/1000;
 figure
 plot(x, watpower(:), 'b-o');
 hold on
-plot(x, ones(1, 6)*0.8, '--r')
+% plot(x, ones(1, 6)*0.8, '--r')
 xlabel('partial volume')
 ylabel('Power');
 ylim([-0.2, 1.2]);

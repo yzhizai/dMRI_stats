@@ -1,8 +1,8 @@
-filename = spm_select(1, 'image');
-Y = spm_read_vols(spm_vol(filename));
+close all;
+filenames = cellstr(spm_select(Inf, 'image'));
 
-Y_hist = Y(:);
-Y_hist(isnan(Y_hist)| Y_hist > 20) = [];
-
-figure
-histfit(Y_hist, 50, 'exponential');
+for aa = 1:numel(filenames)
+    Y = spm_read_vols(spm_vol(filenames{aa}));
+    figure
+    histfit(Y(:));
+end

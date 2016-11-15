@@ -8,7 +8,7 @@ Niter = 1000;
 T2 = zeros(numel(filenames) - 1, Niter);
 for aa = 2:numel(filenames)
     siT2 = load(filenames{aa});   
-    for bb = 1:1000
+    for bb = 1:Niter
         T2(aa - 1,bb) = Hotelling_Stats_Power(siT1, siT2);
     end
 end
