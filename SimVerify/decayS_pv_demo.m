@@ -1,16 +1,8 @@
-function decayS_pv_demo(theta)
+function decayS_pv_demo(theta, outputDir, bvalfile, bvecfile, bval, bvec)
 %theta - the angle between two fibers.
-
-outputDir = spm_select(1, 'dir');
+grafatherfolder = fullfile(outputDir, sprintf('theta_%02d', round(theta*180/pi)));
 rng('default')
 tensorDir1 = orth(rand(3)); % generate 3 direction.
-
-bvalfile = spm_select(1, 'bval', ...
-    'choose the diffusion direction');
-bval = load(bvalfile);
-bvecfile = spm_select(1, 'bvec', ...
-    'choose the diffusion direction');
-bvec = load(bvecfile);
 
 Rvec = theta*tensorDir1(:, 3)';
 Rmat = rotationVectorToMatrix(Rvec); %make the tensorDir rotate with z-axis with 90 to
@@ -24,7 +16,7 @@ S2 = decayS(tensorDir2, bval, bvec);
 S0 = 300;
 
 for aa = 0.5:0.1:0.9
-    fatherfolder = fullfile(outputDir, sprintf('lamba_%02d', round(aa*100)));
+    fatherfolder = fullfile(grafatherfolder, sprintf('lamba_%02d', round(aa*100)));
     mkdir(fatherfolder);
     copyfile(bvecfile, fullfile(fatherfolder, 'bvecs'));
     copyfile(bvalfile, fullfile(fatherfolder, 'bvals'));
