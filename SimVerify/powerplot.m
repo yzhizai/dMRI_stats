@@ -1,9 +1,9 @@
 function powerplot
 %%
 close all
-myval = abs(cat(1, zeros(1, 1000), Tval));
+myval = abs(cat(1, zeros(1, 1000), Fval));
 % x =[3/2, 7/3, 4/1, 9];
-x = 15:15:180;
+x = 0:15:180;
 figure
 hold on
 for aa = 1:size(myval, 2)

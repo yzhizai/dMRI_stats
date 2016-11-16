@@ -7,7 +7,9 @@ applywarp --ref=${FSLDIR}/data/standard/FMRIB58_FA_1mm_brain --in=my_f<i> --warp
 
 vecreg -i dyads<i> -o my_warped_dyads<i> -r ${FSLDIR}/data/standard/FMRIB58_FA_1mm_brain -w my_nonlinear_transf
 ```
-## Tensor construction
+
+## pseudo-DT
+### Tensor construction
 要变换成张量数据进行分析，最主要的一点是利用上面的四幅图像构建一个可以用于分析的张量。整个构建过程是由`dataConvert.m`函数完成的。主要程序是：
 ```
 vec1 = sign(vec1(3))*vec1; %modify the vector to align with the z-axis.
@@ -26,10 +28,11 @@ D = diag([f1, f2, CosTheta]);
 
 siT = V*D/V;
 ```
-构建完成之后，单个数据过于庞大（>700M），后面要进行数据分析同时导入多个被试的数据会非常消耗内存，所以分层进行数据分析。
-1. 首先利用`dataSlice.m`函数将数据分层；
-1. 然后利用`slice_folder.m`函数将不同被试的相同层放置到一个文件夹下；
-1. 最后利用`matT4D.m`函数将被试每一层叠加成一个4-D矩阵，第四维为被试；
-之后就可以使用`Hotelling_Stats.m`函数进行统计分析。
+构建完成之后，单个数据过于庞大（>700M），后面要进行数据分析同时导入多个被试的数据会非常消耗内存，所以分层进行数据分析。  
+1. 首先利用`dataSlice.m`函数将数据分层；  
+1. 然后利用`slice_folder.m`函数将不同被试的相同层放置到一个文件夹下；  
+1. 最后利用`matT4D.m`函数将被试每一层叠加成一个4-D矩阵，第四维为被试；  
+之后就可以使用`Hotelling_Stats.m`函数进行统计分析。  
 
-
+## mixed-watson method
+see the README.md in mixWatson folder
