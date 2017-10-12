@@ -2,17 +2,17 @@ function T2 = Hotelling_Stats(sliceData, n1, n2)
 %Input:
 %  sliceData - 
 warning off
-% grp1 = sliceData(:, :, :, 1:n1);
-% grp2 = sliceData(:, :, :, n1 + 1:end);
-% 
-% x_ = mean(grp1, 4);
-% y_ = mean(grp2, 4);
-% 
-% meanMat = cat(4, repmat(x_, 1, 1, 1, n1), repmat(y_, 1, 1, 1, n2));
-% 
-% sliceDataMean = sliceData - meanMat;
-% 
-% d = Nine2Six(x_ - y_);
+grp1 = sliceData(:, :, :, 1:n1);
+grp2 = sliceData(:, :, :, n1 + 1:end);
+
+x_ = mean(grp1, 4);
+y_ = mean(grp2, 4);
+
+meanMat = cat(4, repmat(x_, 1, 1, 1, n1), repmat(y_, 1, 1, 1, n2));
+
+sliceDataMean = sliceData - meanMat;
+
+d = Nine2Six(x_ - y_);
 
 % S_temp = [];
 % for aa = 1:(n1+n2)
@@ -25,14 +25,16 @@ warning off
 % 
 % S = sum(S_temp, 4);
 
-sliceData_cell = num2cell(sliceData, [3, 4]);
-[dim_1, dim_2] = size(sliceData_cell);
+sliceDataMean_cell = num2cell(sliceDataMean, [3, 4]);
+[dim_1, dim_2] = size(sliceDataMean);
 T2 = zeros(dim_1, dim_2);
 for bb = 1:dim_2
     for aa = 1:dim_1
-        T2(aa, bb) = hotelling_t2(sliceData_cell{aa, bb}, n1, n2);
+        T2(aa, bb) = hotelling_t2(sliceDataMean_cell{aa, bb}, n1, n2);
     end
 end
+
+T2 = cellfun(@(dmat, Smat) hotelling_t2(dmat, Smat, n1, n2), num2cell(d, 3), num2cell(S, 3));
 
 warning on
 
@@ -54,13 +56,13 @@ x_part_cov = x_part_centered'*x_part_centered;
 y_part_cov = y_part_centered'*y_part_centered;
 
 total_cov = (x_part_cov + y_part_cov)/(n1 + n2 - 2);
-t_square = (n1*n2/(n1 + n2))*(x_part_mean - y_part_mean)/total_cov*(x_part_mean - y_part_mean)';
+t_square = (n1*n1/(n1 + n2))*(x_part_mean - y_part_mean)/total_cov*(x_part_mean - y_part_mean)';
 T2 = (n1 + n2 - 7)/(n1 + n2 - 2)/6*t_square;
 % transfer A(:) to vecd(reshape(A, 3, 3)) type.
-% function mat6 = Nine2Six(mat9)
-% 
-% mat6 = mat9(:, :, [1, 5, 9, 4, 7, 8]);
-% mat6(:, :, 4:6, :) = sqrt(2)*mat6(:, :, 4:6);
+function mat6 = Nine2Six(mat9)
+
+mat6 = mat9(:, :, [1, 5, 9, 4, 7, 8]);
+mat6(:, :, 4:6, :) = sqrt(2)*mat6(:, :, 4:6);
 
 % function T2 = hotelling_t2(dmat, Smat, n1, n2)
 % 

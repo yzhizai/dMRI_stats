@@ -14,11 +14,11 @@ function dataConvert(foldername)
 oldpath = pwd();
 cd(foldername);
 
-dyads1_array = spm_read_vols(spm_vol('dyads1_warp.nii'));
-dyads2_array = spm_read_vols(spm_vol('dyads2_warp.nii'));
+dyads1_array = spm_read_vols(spm_vol('dyads1.nii'));
+dyads2_array = spm_read_vols(spm_vol('dyads2.nii'));
 
-f1 = spm_read_vols(spm_vol('mean_f1samples_warp.nii'));
-f2 = spm_read_vols(spm_vol('mean_f2samples_warp.nii'));
+f1 = spm_read_vols(spm_vol('mean_f1samples.nii'));
+f2 = spm_read_vols(spm_vol('mean_f2samples.nii'));
 
 [dim_x, dim_y, dim_z] = size(f1);
 % dyads1 = arrayfun(@scalar2vector, dyads1_array(:, :, :, 1), dyads1_array(:, :, :, 2), ...
@@ -62,12 +62,15 @@ if f2 < 0.15
 else
     vec1 = sign(vec1(3))*vec1;    %modify the vector to align with the z-axis.
     vec2 = sign(vec1'*vec2)*vec2; %promise the angle between two vector less than 90.
+
     vec3 = cross(vec1, vec2);
     vec3 = vec3/norm(vec3);
     vec3 = sign(vec3(3))*vec3;
+
     vec4 = cross(vec1, vec3);
     vec4 = vec4/norm(vec4);
     vec4 = sign(vec4(3))*vec4;
+
     % CosTheta = vec1'*vec2
     CosTheta = dot(vec1, vec2); %add a weight to reduce the random effects.
 

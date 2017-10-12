@@ -4,12 +4,14 @@ foldernames = cellstr(spm_select(Inf, 'dir'));
 
 filename2 = spm_select(1, 'image');
 V = spm_vol(filename2);
+h = waitbar(0, 'waiting...');
 for aa = 1:numel(foldernames)
+    waitbar(aa/numel(foldernames));
     cd(foldernames{aa});
     
     Dat = load('sliceData.mat');
 
-    T2 = Hotelling_Stats(Dat.sliceData, 10, 10);
+    T2 = Hotelling_Stats(Dat.sliceData, 10, 8);
 
 
     fname2 = 'T2.nii';
@@ -23,4 +25,4 @@ for aa = 1:numel(foldernames)
 
     spm_write_plane(V2, T2, 1);
 end
-
+delete(h);
