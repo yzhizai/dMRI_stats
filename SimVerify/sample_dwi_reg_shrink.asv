@@ -1,5 +1,5 @@
-function sample_dwi_reg_shrink
-% new_order comes from reArrange diffusion gradients.
+function sample_dwi_reg_shrink(new_order)
+
 output_dir = spm_select(1, 'dir', 'choose a directory to store the results file');
 bvalfile = spm_select(1, 'bval', ...
     'choose the diffusion direction');
@@ -12,6 +12,9 @@ if size(bvec, 1) > size(bvec, 2)
     bvec = bvec';
 end
 
+bvec_dwi = bvec(:, 2:end);
+bvec_dwi = bvec_dwi(new_order);
+bvec(:, 2:end) = bvec_dwi;  %rearrange the order of the diffusion gradients.
 
 number_volume = length(bval);
 
@@ -24,15 +27,14 @@ N = 20;
 
 
 D0 = (d1 - d2)*(dir_z*dir_z') + d2*eye(3);
-S_final_norm = signal_generate(D0, S0, bval, bvec, sigma, N);  %the normal signal
-S_final_norm_recon = main_final_for_single_voxel(S_final_norm, bvecfile, bvalfile);
+S_final_norm = signal_generate(D0, S0, bval, bvec, sigma, N);
+
 step_i = linspace(d1, d2, 10);
 for aa = 1:length(step_i)
     D1 = (step_i(aa) - d2)*(dir_z*dir_z') + d2*eye(3);
     
     S_final_abnorm = signal_generate(D1, S0, bval, bvec, sigma, N);
-    S_final_abnorm_recon = main_final_for_single_voxel(S_final_abnorm, bvecfile, bvalfile);
-    S = cat(1, S_final_norm_recon, S_final_abnorm_recon)';
+    S = cat(1, S_final_norm, S_final_abnorm)';
     subInd = repmat((1:2*N)',1, number_volume)';
     volInd = repmat(1:number_volume, 2*N, 1)';
     group = repmat({'HC', 'PAT'}, numel(S)/2, 1);

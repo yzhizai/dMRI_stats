@@ -24,7 +24,7 @@ N = 20;
 
 D0 = (d1 - d2)*(dir_z*dir_z') + d2*eye(3);
 S_final_norm = signal_generate(D0, S0, bval, bvec, sigma, N);
-
+S_final_norm_recon = main_final_for_single_voxel(S_final_norm, bvecfile, bvalfile);
 angle_i = linspace(0, pi/2, 10);
 
 for aa = 1:length(angle_i)
@@ -33,7 +33,8 @@ for aa = 1:length(angle_i)
     D1 = Rmat*D0*Rmat';
     
     S_final_abnorm = signal_generate(D1, S0, bval, bvec, sigma, N);
-    S = cat(1, S_final_norm, S_final_abnorm)';
+    S_final_abnorm_recon = main_final_for_single_voxel(S_final_abnorm, bvecfile, bvalfile);
+    S = cat(1, S_final_norm_recon, S_final_abnorm_recon)';
     subInd = repmat((1:2*N)',1, number_volume)';
     volInd = repmat(1:number_volume, 2*N, 1)';
     group = repmat({'HC', 'PAT'}, numel(S)/2, 1);
